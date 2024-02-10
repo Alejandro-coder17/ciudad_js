@@ -83,3 +83,14 @@ function normalize(p) {
 function magnitude(p) {
    return Math.hypot(p.x, p.y);
 }
+
+function lerp2D(A, B, t) {
+   return new Point(lerp(A.x, B.x, t), lerp(A.y, B.y, t));
+}
+
+function getFake3dPoint(point, viewPoint, height) {
+   const dir = normalize(subtract(point, viewPoint));
+   const dist = distance(point, viewPoint);
+   const scaler = Math.atan(dist / 300) / (Math.PI / 2);
+   return add(point, scale(dir, height * scaler));
+}
