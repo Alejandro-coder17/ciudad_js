@@ -9,13 +9,32 @@
     <h1>World Editor</h1>
     <canvas id="myCanvas"></canvas>
     <div id="controls">
-        <button onclick="dispose()">Eliminar</button>
-        <button onclick="save()">Guardar</button>
+        <button onclick="dispose()">🗑️</button>
+         <button onclick="save()">💾</button>
+         &nbsp;
+         <button id="graphBtn" onclick="setMode('graph')">🌐</button>
+         <button id="stopBtn" onclick="setMode('stop')">🛑</button>
+         <button id="crossingBtn" onclick="setMode('crossing')">🚶</button>
+         <button id="lightBtn" onclick="setMode('light')">🚦</button>
+         <button id="startBtn" onclick="setMode('start')">🚙</button>
+         <button id="targetBtn" onclick="setMode('target')">🎯</button>
     </div>
 
     <script src="js/world.js"></script>
     <script src="js/viewport.js"></script>
-    <script src="js/graphEditor.js"></script>
+    <script src="js/markings/marking.js"></script>
+    <script src="js/markings/stop.js"></script>
+    <script src="js/markings/light.js"></script>
+    <script src="js/markings/target.js"></script>
+    <script src="js/markings/start.js"></script>
+    <script src="js/markings/crossing.js"></script>
+    <script src="js/editors/markingEditor.js"></script>
+    <script src="js/editors/graphEditor.js"></script>
+    <script src="js/editors/stopEditor.js"></script>
+    <script src="js/editors/lightEditor.js"></script>
+    <script src="js/editors/targetEditor.js"></script>
+    <script src="js/editors/startEditor.js"></script>
+    <script src="js/editors/crossingEditor.js"></script>
     <script src="js/items/tree.js"></script>
     <script src="js/items/building.js"></script>
     <script src="js/math/utils.js"></script>

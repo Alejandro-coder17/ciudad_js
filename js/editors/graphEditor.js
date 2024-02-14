@@ -10,18 +10,39 @@ class GraphEditor {
        this.hovered = null;
        this.dragging = false;
        this.mouse = null;
- 
-       this.#addEventListeners();
+    }
+
+    enable() {
+        this.#addEventListeners();
+    }
+
+    disable(){
+        this.#removeEventListeners();
+        this.selected = false;
+        this.hovered = false;
     }
 
     #addEventListeners() {
+
+        this.boundMouseDown = this.#handleMouseDown.bind(this);
+        this.boundMouseMove = this.#handleMouseMove.bind(this);
+        this.boundMouseUp = () => this.dragging = false;
+        this.boundContextMenu = (e) => e.preventDefault();
+
         //La función bind sirve para referenciar el mismo objeto(GraphEditor) al pasarse por un método
-        this.canvas.addEventListener("mousedown", this.#handleMouseDown.bind(this));
+        this.canvas.addEventListener("mousedown", this.boundMouseDown);
         //Colorea el punto cuanto pasas por encima
-        this.canvas.addEventListener("mousemove", this.#handleMouseMove.bind(this));
+        this.canvas.addEventListener("mousemove", this.boundMouseMove);
         //Evita abrir una ventana con el click derecho
-        this.canvas.addEventListener("contextmenu", (e) => e.preventDefault());
-        this.canvas.addEventListener("mouseup", () => this.dragging = false);
+        this.canvas.addEventListener("contextmenu", this.boundContextMenu);
+        this.canvas.addEventListener("mouseup", this.boundMouseUp);
+    }
+
+    #removeEventListeners() {
+        this.canvas.removeEventListener("mousedown", this.boundMouseDown);
+        this.canvas.removeEventListener("mousemove", this.boundMouseMove);
+        this.canvas.removeEventListener("contextmenu", this.boundContextMenu);
+        this.canvas.removeEventListener("mouseup", this.boundMouseUp);
     }
 
     #handleMouseDown(e) {
