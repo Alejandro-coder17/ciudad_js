@@ -68,13 +68,16 @@ const s2 = new Segment(p1, p3);
 const s3 = new Segment(p1, p4);
 const s4 = new Segment(p2, p3);*/
 
-const graphString = localStorage.getItem("graph");
-const graphInfo = graphString ? JSON.parse(graphString) : null;
-const graph = graphInfo ? 
-            Graph.load(graphInfo)
-            : new Graph();
-const world = new World(graph);
-const viewport = new Viewport(myCanvas);
+const worldString = localStorage.getItem("world");
+const worldInfo = worldString ? JSON.parse(worldString) : null;
+
+let world = worldInfo ?
+    World.load(worldInfo) 
+    : new World(new Graph());
+
+const graph = world.graph;
+
+const viewport = new Viewport(myCanvas, world.zoom, world.offset);
 const tools = {
     graph: { button: graphBtn, editor: new GraphEditor(viewport, graph) },
     stop: { button: stopBtn, editor: new StopEditor(viewport, world) },
@@ -113,8 +116,43 @@ function dispose() {
 }
 
 function save() {
-    localStorage.setItem("graph", JSON.stringify(graph));
+    world.zoom = viewport.zoom;
+    world.offset = viewport.offset;
+
+    const element = document.createElement("a");
+    element.setAttribute(
+        "href",
+        "data:application/json;charset=utf-8," +
+            encodeURIComponent(JSON.stringify(world))
+    );
+
+    const fileName = "name.world";
+    element.setAttribute("download", fileName);
+
+    element.click();
+    localStorage.setItem("world", JSON.stringify(world));
 }
+
+function load(event) {
+    const file = event.target.files[0];
+
+    if (!file) {
+       alert("No file selected.");
+       return;
+    }
+
+    const reader = new FileReader();
+    reader.readAsText(file);
+
+    reader.onload = (evt) => {
+       const fileContent = evt.target.result;
+       const jsonData = JSON.parse(fileContent);
+       console.log(jsonData);
+       world = World.load(jsonData);
+       localStorage.setItem("world", JSON.stringify(world));
+       location.reload();
+    }
+ }
 
 function setMode(mode){
     dissableEditors();
